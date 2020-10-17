@@ -352,16 +352,3 @@ def portfolio_rate(portfolio):
 
   return plt.show()
 
-start_date = dt.datetime(2020,1,1)
-end_date = dt.date.today()
-WIG20_tabel = WIG20_frame(start_date,end_date) #Run once time because its API
-
-WIG20_tabel
-
-WIG20_by_stocks = WIG20_tabel.groupby('Stock_name') #This is our basic tabel to creating portfolios !!!!!!!!!!!!!!!!!
-
-stock_info('Alior Bank')
-
-stock_visualization('Alior Bank')
-
-stock_rate('Alior Bank')
