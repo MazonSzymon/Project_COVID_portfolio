@@ -191,7 +191,7 @@ def preparing_portfolio_by_date(total_investments,stocks,date):
   stocks_data = map(get_frame,stocks)
   df = pd.concat(stocks_data, keys = stocks, names= ['Stock','Date'])
   df = df.reset_index(inplace = True)
-  df = df[df['Date'] > = date]
+  df = df[df['Date'] >= date]
   df = df.reset_index().pivot(index='Date',columns = 'Stock', values = ['Close','Volume'])
   portfolio_change = (1 + df[['Close']].pct_change()).cumprod().fillna(1).round(2).rename(columns = {'Close' : 'ROI'})
   integrer_of_stocks = (total_investments/df['Close'].iloc[0]).astype(int).values
