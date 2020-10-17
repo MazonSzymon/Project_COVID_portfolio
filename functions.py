@@ -182,6 +182,36 @@ def preparing_portfolio(total_investments,stocks):
   print("and the rest from investment {rest} PLN".format(rest = rest_investment.sum().round(2)))
   return portfolio_value
 
+def preparing_portfolio_by_date(total_investments,stocks,date):
+  
+  #Get data to stock
+  def get_frame(stock):
+    return WIG20_by_stocks.get_group(stock)
+  
+  stocks_data = map(get_frame,stocks)
+  df = pd.concat(stocks_data, keys = stocks, names= ['Stock','Date'])
+  df = df.reset_index(inplace = True)
+  df = df[df['Date'] > = date]
+  df = df.reset_index().pivot(index='Date',columns = 'Stock', values = ['Close','Volume'])
+  portfolio_change = (1 + df[['Close']].pct_change()).cumprod().fillna(1).round(2).rename(columns = {'Close' : 'ROI'})
+  integrer_of_stocks = (total_investments/df['Close'].iloc[0]).astype(int).values
+  investment_by_stocks = integrer_of_stocks  * df['Close'].iloc[0]
+  rest_investment = total_investments - investment_by_stocks.values
+  rest_investment
+  investment_value = portfolio_change.multiply(investment_by_stocks.values).rename(columns = {'ROI' : 'Investments_value'}).round(2)
+  investment_value['Sum_of_investments'] = investment_value.sum(axis=1).round(2)
+  portfolio_value = pd.concat([df,portfolio_change,investment_value], axis = 1)
+  portfolio_value['ROI_of_investments'] = (1 + portfolio_value[['Sum_of_investments']].pct_change()).cumprod().fillna(1).round(2)
+  tmp = portfolio_value.columns.to_frame()['Stock'].values
+  print("-"*50)
+  print("At {start_date} We first want to inveset {first_invest_value} PLN".format(start_date = date.date() first_invest_value = total_investments.sum()))
+  print("We get")
+  for i in range(len(integrer_of_stocks)):
+    print("{integrer} stocks {company} for {price} PLN total {total} PLN".format(
+        integrer = integrer_of_stocks[i], company = portfolio_value[['Investments_value'][0]].columns[i], price = portfolio_value['Close'].iloc[0][i], total = portfolio_value['Investments_value'][tmp[i]][0]))
+  print("and the rest from investment {rest} PLN".format(rest = rest_investment.sum().round(2)))
+  return portfolio_value
+
 """>> ### portfolio_summary"""
 
 def portfolio_summary(portfolio):
