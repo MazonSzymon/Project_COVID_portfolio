@@ -348,7 +348,7 @@ def portfolio_rate(portfolio):
 
 start_date = dt.datetime(2020,1,1)
 end_date = dt.date.today()
-#WIG20_tabel = WIG20_frame(start_date,end_date) #Run once time because its API
+WIG20_tabel = WIG20_frame(start_date,end_date) #Run once time because its API
 
 WIG20_tabel
 
